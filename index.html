@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>OS Assignment Scripts - Om Kolte</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin: 2rem; background:#f7fafc; color:#111827; }
+    header { margin-bottom:1rem; }
+    h1 { font-size:1.5rem; margin:0; }
+    p.lead { color:#374151; margin-top:0.25rem; }
+    .actions { margin:1rem 0; }
+    a.button {
+      display:inline-block; padding:0.5rem 1rem; background:#2563eb; color:white; text-decoration:none; border-radius:6px;
+      box-shadow:0 1px 2px rgba(0,0,0,0.05);
+    }
+    .container { background:white; border-radius:8px; padding:1rem; box-shadow:0 2px 6px rgba(2,6,23,0.04); }
+    pre { overflow:auto; max-height:70vh; background:#0f172a; color:#e6edf3; padding:1rem; border-radius:6px; white-space:pre-wrap; }
+    .note { color:#6b7280; font-size:0.9rem; margin-top:0.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OS Assignment Scripts (Extracted)</h1>
+    <p class="lead">Shell scripts extracted from your PDF, ready to host on GitHub Pages.</p>
+  </header>
+
+  <div class="actions">
+    <!-- Developer instruction: include the local path to the txt file as the URL -->
+    <a class="button" href="/mnt/data/os_assignment_code.txt" download>Download TXT file</a>
+    &nbsp;
+    <a class="button" href="/mnt/data/os_assignment_page.html" download>Download this HTML</a>
+  </div>
+
+  <div class="container">
+    <h2>Code (Click "Download TXT file" to get .txt)</h2>
+    <pre><code>
+(a) Shell Script to Display Disk Usage
+--------------------------------------
+
+while true
+do
+    echo &quot;Enter:&quot;
+    echo &quot;1. Show disk usage in human readable form (-h)&quot;
+    echo &quot;2. Show disk usage in MB (-m)&quot;
+    echo &quot;3. Show inode usage (-i)&quot;
+    echo &quot;4. Show disk usage in powers of 1000 (-H)&quot;
+    echo &quot;5. Show filesystem type (-T)&quot;
+    echo &quot;6. Show local filesystems only (-l)&quot;
+    echo &quot;7. Exit&quot;
+
+    read ch
+
+    case &quot;$ch&quot; in
+        1) df -h ;;
+        2) df -m ;;
+        3) df -i ;;
+        4) df -H ;;
+        5) df -T ;;
+        6) df -l ;;
+        7)
+            echo &quot;Exiting...&quot;
+            break
+            ;;
+        *)
+            echo &quot;Invalid Choice!&quot;
+            ;;
+    esac
+
+    echo &quot;Do you want to continue? (y/n): &quot;
+    read ans
+
+    case &quot;$ans&quot; in
+        y) continue ;;
+        n) echo &quot;Exiting...&quot;; break;;
+        *) echo &quot;Invalid input, exiting...&quot;; break;;
+    esac
+done
+
+
+(b) Shell Script for File &amp; Directory Permission Commands
+---------------------------------------------------------
+
+while true
+do
+    echo &quot;======================================&quot;
+    echo &quot; File Permission Management Menu&quot;
+    echo &quot;======================================&quot;
+    echo &quot;1. Check file permissions&quot;
+    echo &quot;2. Set read permission&quot;
+    echo &quot;3. Set write permission&quot;
+    echo &quot;4. Set execute permission&quot;
+    echo &quot;5. Remove read permission&quot;
+    echo &quot;6. Remove write permission&quot;
+    echo &quot;7. Remove execute permission&quot;
+    echo &quot;8. Exit&quot;
+    echo &quot;--------------------------------------&quot;
+    read -p &quot;Enter your choice [1-8]: &quot; choice
+
+    case $choice in
+        1)
+            read -p &quot;Enter filename: &quot; file
+            if [ -e &quot;$file&quot; ]; then
+                ls -l &quot;$file&quot;
+            else
+                echo &quot;File does not exist.&quot;
+            fi
+            ;;
+
+        2)
+            read -p &quot;Enter filename: &quot; file
+            chmod u+r &quot;$file&quot;
+            echo &quot;Read permission granted to user for $file.&quot;
+            ;;
+
+        3)
+            read -p &quot;Enter filename: &quot; file
+            chmod u+w &quot;$file&quot;
+            echo &quot;Write permission granted to user for $file.&quot;
+            ;;
+
+        4)
+            read -p &quot;Enter filename: &quot; file
+            chmod u+x &quot;$file&quot;
+            echo &quot;Execute permission granted to user for $file.&quot;
+            ;;
+
+        5)
+            read -p &quot;Enter filename: &quot; file
+            chmod u-r &quot;$file&quot;
+            echo &quot;Read permission removed for user on $file.&quot;
+            ;;
+
+        6)
+            read -p &quot;Enter filename: &quot; file
+            chmod u-w &quot;$file&quot;
+            echo &quot;Write permission removed for user on $file.&quot;
+            ;;
+
+        7)
+            read -p &quot;Enter filename: &quot; file
+            chmod u-x &quot;$file&quot;
+            echo &quot;Execute permission removed for user on $file.&quot;
+            ;;
+
+        8)
+            echo &quot;Exiting... Goodbye!&quot;
+            exit 0
+            ;;
+
+        *)
+            echo &quot;Invalid choice. Please try again.&quot;
+            ;;
+    esac
+done
+
+
+(c) Shell Script to Check &amp; Set File Permissions
+------------------------------------------------
+
+# Usage: ./set_permissions.sh &lt;filename&gt; &lt;permissions&gt;
+
+if [ $# -ne 2 ]; then
+    echo &quot;Incorrect arguments...&quot;
+    echo &quot;Usage: $0 &lt;filename&gt; &lt;Permissions&gt;&quot;
+    echo &quot;Example: $0 myfile.txt 755&quot;
+    exit 1
+fi
+
+FILENAME=$1
+PERMISSIONS=$2
+
+if [ ! -e &quot;$FILENAME&quot; ]; then
+    echo &quot;Error: $FILENAME does not exist!&quot;
+    exit 2
+fi
+
+echo &quot;-------------------------------------------------&quot;
+echo &quot;Current ownership and permissions:&quot;
+ls -ld &quot;$FILENAME&quot;
+echo &quot;-------------------------------------------------&quot;
+
+CURRENT_PERM=$(stat -c &quot;%a&quot; &quot;$FILENAME&quot;)
+
+if [ &quot;$CURRENT_PERM&quot; -eq &quot;$PERMISSIONS&quot; ]; then
+    echo &quot;No changes needed. Permissions are already set to $PERMISSIONS.&quot;
+else
+    echo &quot;Setting permissions to $PERMISSIONS...&quot;
+    chmod &quot;$PERMISSIONS&quot; &quot;$FILENAME&quot;
+    echo &quot;Permissions updated successfully!&quot;
+    echo &quot;-------------------------------------------------&quot;
+    ls -ld &quot;$FILENAME&quot;
+fi
+</code></pre>
+    <p class="note">Tip: To host on GitHub Pages, push this HTML file (os_assignment_page.html) to your repository's <code>gh-pages</code> branch or serve from the repository root on the <code>main</code> branch if using /docs.</p>
+  </div>
+
+  <footer style="margin-top:1rem; color:#6b7280;">
+    <p>File paths included for convenience:</p>
+    <ul>
+      <li>TXT file: <code>/mnt/data/os_assignment_code.txt</code></li>
+      <li>HTML file: <code>/mnt/data/os_assignment_page.html</code></li>
+    </ul>
+  </footer>
+</body>
+</html>
